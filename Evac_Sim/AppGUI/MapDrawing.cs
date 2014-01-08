@@ -232,5 +232,41 @@ namespace Evac_Sim.AppGUI
         {
             paper.DrawLine(pBlue, from, to);
         }
+
+        public bool UpdateMeirGraph(uint xpos, uint ypos, bool agenORexit)
+        {
+            if (agenORexit)
+            {
+                if (g.graphForMeir[ypos][xpos] == 'a')
+                {
+                    g.graphForMeir[ypos][xpos] = '.';
+                    return false;
+                }
+                g.graphForMeir[ypos][xpos] = 'a';
+            }
+            else
+            {
+                if (g.graphForMeir[ypos][xpos] == 'e')
+                {
+                    g.graphForMeir[ypos][xpos] = '.';
+                    return false;
+                }
+                g.graphForMeir[ypos][xpos] = 'e';
+            }
+            return true;
+        }
+
+        public void WriteMeirFile(string filenamekeeper)
+        {
+            filenamekeeper = Path.ChangeExtension(filenamekeeper, ".txt");
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(filenamekeeper))
+            {
+                file.WriteLine(g.graphForMeir.Length.ToString() + " " + g.graphForMeir[0].Length.ToString());
+                foreach (char[] ch in g.graphForMeir)
+                {
+                    file.WriteLine(new string(ch));
+                }
+            }
+        }
     }
 }

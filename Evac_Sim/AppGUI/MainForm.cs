@@ -54,11 +54,13 @@ namespace Evac_Sim.AppGUI
                 {
                     if (drawAgent)
                     {
-                        Utils.fillState(fillpoint, Color.Red);
+                        Utils.fillState(fillpoint,
+                            Utils.md.UpdateMeirGraph(fillpoint.xLoc, fillpoint.yLoc, true) ? Color.Red : Color.White);
                     }
                     if (drawExit)
                     {
-                        Utils.fillState(fillpoint,Color.Yellow);
+                        Utils.fillState(fillpoint,
+                            Utils.md.UpdateMeirGraph(fillpoint.xLoc, fillpoint.yLoc, false) ? Color.Yellow : Color.White);
                     }
                     Draw();
                 }
@@ -165,5 +167,11 @@ namespace Evac_Sim.AppGUI
             pictureBox3.BackColor = Color.GhostWhite;
             pictureBox2.BackColor = Color.Red; 
         }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+          Utils.writeMeirFile(filenamekeeper);
+        }
+
     }
 }

@@ -268,5 +268,10 @@ namespace Evac_Sim.AppGUI
                 }
                 return max;
             }
+
+            public static void writeMeirFile(string filenamekeeper)
+            {
+                md.WriteMeirFile(filenamekeeper);
+            }
         }
     }
