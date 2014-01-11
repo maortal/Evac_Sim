@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Evac_Sim.AgentsLogic;
 using Evac_Sim.WorldMap;
 
 namespace Evac_Sim.AppGUI
@@ -14,9 +15,9 @@ namespace Evac_Sim.AppGUI
 
             public static bool cancel = false;
 
-            public static int speed = 210;
+            public static int speed = 0;
 
-            public static uint fastForword = 1;
+            public static uint fastForword = 10;
 
             public static void slower()
             {
@@ -58,7 +59,7 @@ namespace Evac_Sim.AppGUI
                 drawCounter++;
                 if (drawCounter % fastForword == 0 || goal)
                 {
-                    fm.BackgroundWorker.ReportProgress(1);
+                    fm.backgroundWorker1.ReportProgress(1);
                     System.Threading.Thread.Sleep(speed);
                     drawCounter = 0;
                 }
@@ -106,27 +107,16 @@ namespace Evac_Sim.AppGUI
                 pause = false;
             }
 
-            public static void drawSolution(List<State> sol)
+            public static void drawSolution(SolPath sol, Color pathcolor)
             {
                 if (sol != null)
                 {
                     if (pause)
                         System.Threading.Thread.Sleep(100);
-                    ReDraw();
-                    State prevV = null;
+                    //ReDraw();
                     foreach (State v in sol)
-                    {
-                        md.PaintRec(paper, ((State)v).Index, Color.Blue, indexing);
-
-                        if (prevV != null)
-                        {
-                            //if (Graph.HairDistance(v, prevV) > 2)
-                           // {
-                          //      md.DrawLine(paper, prevV.Index, v.Index);
-                          //  }
-                        }
-                        prevV = v;
-                    }
+                        md.PaintRec(paper, ((State) v).Index, pathcolor, indexing);
+                    md.PaintEllipse(paper, ((State)sol.Solgoal()).Index, Color.Yellow);
                 }
 
             }
@@ -161,7 +151,7 @@ namespace Evac_Sim.AppGUI
                 drawCounter++;
                 if (drawCounter % fastForword == 0 || goal)
                 {
-                    fm.BackgroundWorker.ReportProgress(1);
+                    fm.backgroundWorker1.ReportProgress(1);
                     System.Threading.Thread.Sleep(speed);
                     drawCounter = 0;
                 }
@@ -226,7 +216,7 @@ namespace Evac_Sim.AppGUI
                     return;
                 paper.Clear(Color.Black);
                 md.DrawMap(Utils.paper, Utils.indexing);
-                fm.BackgroundWorker.ReportProgress(1);
+                fm.backgroundWorker1.ReportProgress(1);
             }
 
             public static void SetIndexing()
@@ -234,7 +224,7 @@ namespace Evac_Sim.AppGUI
                 indexing = !indexing;
                 md.reIndex(paper, indexing);
             }
-
+/*
             public static State GetBestLS(ref LinkedList<State> open)
             {
                 LinkedListNode<State> best = null;
@@ -256,7 +246,7 @@ namespace Evac_Sim.AppGUI
                 }
                 open.Remove(best);
                 return best.Value;
-            }
+            }*/
 
             public static double GetMaxEdgeCost(ActionMoves[] aMa)
             {

@@ -48,7 +48,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentsLogic\Agent.cs" />
-    <Compile Include="AgentsLogic\Path.cs" />
+    <Compile Include="AgentsLogic\SolPath.cs" />
+    <Compile Include="AppGUI\AgentsViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AppGUI\AgentsViewer.Designer.cs">
+      <DependentUpon>AgentsViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="AppGUI\MapDrawing.cs" />
     <Compile Include="AppGUI\Utils.cs" />
     <Compile Include="DataStructures\BinaryHeap.cs" />
@@ -64,12 +70,16 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SearchAlgorithems\AgentSearchNode.cs" />
-    <Compile Include="SearchAlgorithems\CoopAstar.cs" />
-    <Compile Include="SearchAlgorithems\SearchPolicy.cs" />
+    <Compile Include="SearchAlgorithems\Astar.cs" />
+    <Compile Include="SearchAlgorithems\Heuristic.cs" />
+    <Compile Include="SearchAlgorithems\OctileHeur.cs" />
+    <Compile Include="SearchAlgorithems\SearchAlgo.cs" />
     <Compile Include="WorldMap\ActionMoves.cs" />
     <Compile Include="WorldMap\Graph.cs" />
     <Compile Include="WorldMap\State.cs" />
+    <EmbeddedResource Include="AppGUI\AgentsViewer.resx">
+      <DependentUpon>AgentsViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AppGUI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -84,6 +94,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="Properties\DataSources\Evac_Sim.AgentsLogic.Agent.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

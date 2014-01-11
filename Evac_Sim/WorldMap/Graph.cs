@@ -9,7 +9,6 @@ namespace Evac_Sim.WorldMap
 {
     public class Graph
     {
-        public char[][] graphForMeir { get; set; }
         public State[] GraphMap { get; private set; }
         public State[] Blocked { get; private set; }
         public State[][] Grid { get; private set; }
@@ -49,19 +48,15 @@ namespace Evac_Sim.WorldMap
             uint i=0;
             List<State> green = new List<State>();
             Grid = new State[Height][];
-            graphForMeir = new char[Height][];
             for (uint y = 0; y < Height; y++)
             {
                 Grid[y] = new State[Width];
-                graphForMeir[y] = new char[Width];
                 line = map.ReadLine();
                 for (uint x = 0; x < Width; x++)
                 {
                     cell = line.ElementAt((int) x);
-                    graphForMeir[y][x] = '@';
                     if (cell == '.'){
                         Grid[y][x] = new State(i++, (uint) aa.Length, x, y);
-                        graphForMeir[y][x] = '.';
                     }
             else
                     {
@@ -141,6 +136,14 @@ namespace Evac_Sim.WorldMap
                     }
                     GraphMap[(int)Grid[y][x].Index] = Grid[y][x];
                 }
+            }
+        }
+
+        public void reset()
+        {
+            foreach (State s in GraphMap)
+            {
+                s.reset();
             }
         }
     }

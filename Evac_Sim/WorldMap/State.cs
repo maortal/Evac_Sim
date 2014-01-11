@@ -11,19 +11,27 @@ namespace Evac_Sim.WorldMap
         public uint Index { get; private set; }
         public uint xLoc { get; private set; }
         public uint yLoc { get; private set; }
-        public SortedList<uint,Agent> Timestamp { get; private set; }
+        //public SortedList<uint,Agent> Timestamp { get; private set; }
         public State[] Neighbours { get; protected set; }
         public double gCost;
         public double hCost;
         public State PrevStep;
         public bool Closed;
-        public double LocalSearchGCostWith { get; private set; }
-        public double LocalSearchGCostWithOut { get; private set; }
         private int IdxInHeap;
-        private char chartowrite;
 
-        public State()
+        public State(){}
+
+        public State(State copyof)
         {
+            Index = copyof.Index;
+            xLoc = copyof.xLoc;
+            yLoc = copyof.yLoc;
+            Neighbours = copyof.Neighbours;
+            gCost = copyof.gCost;
+            hCost = copyof.hCost;
+            PrevStep = copyof.PrevStep;
+            Closed = copyof.Closed;
+            IdxInHeap = copyof.IdxInHeap;
         }
 
         public State(uint index, uint amountOfActions, uint xPos = 0, uint yPos = 0)
@@ -35,18 +43,18 @@ namespace Evac_Sim.WorldMap
             this.Closed = false;
             this.hCost = -1;
             this.gCost = -1;
-            this.LocalSearchGCostWith = double.MaxValue;
-            this.LocalSearchGCostWithOut = double.MaxValue;
         }
 
         public override bool Equals(object obj)
         {
-            return xLoc == ((State)obj).xLoc && yLoc == ((State)obj).yLoc;
+            if (typeof(State) == obj.GetType())
+                return xLoc == ((State) obj).xLoc && yLoc == ((State) obj).yLoc;
+            return false;
         }
 
         public override int GetHashCode()
         {
-            return (int)((xLoc + yLoc * Constants.GridWidth) - int.MaxValue);
+            return (int) ((xLoc + yLoc*Constants.GridWidth) - int.MaxValue);
         }
 
         public int getIndexInHeap()
@@ -54,12 +62,15 @@ namespace Evac_Sim.WorldMap
             return IdxInHeap;
         }
 
-        public void setIndexInHeap(int index) { IdxInHeap = index; }
+        public void setIndexInHeap(int index)
+        {
+            IdxInHeap = index;
+        }
 
         public int CompareTo(IBinaryHeapItem other)
         {
-            State s = (State)other;
-            if ( this.hCost + this.gCost > s.hCost + s.gCost)
+            State s = (State) other;
+            if (this.hCost + this.gCost > s.hCost + s.gCost)
                 return 1;
             else if (this.hCost + this.gCost < s.hCost + s.gCost)
                 return -1;
@@ -70,9 +81,10 @@ namespace Evac_Sim.WorldMap
             else
                 return 0;
         }
+
         public State Apply(ActionMoves a)
         {
-            return ((State)(Neighbours[a.Index]));
+            return ((State) (Neighbours[a.Index]));
         }
 
         public void SetNeighbour(ActionMoves a, State v)
@@ -80,6 +92,37 @@ namespace Evac_Sim.WorldMap
             if (Neighbours[a.Index] != null)
                 throw new Exception("Action leads to two different states");
             Neighbours[a.Index] = v;
+        }
+
+        public SolPath GetPath()
+        {
+            SolPath res = new SolPath();
+            res.Add(this);
+            State curr = this;
+            while (curr != null)
+            {
+                res.Add(curr);
+                curr = curr.PrevStep;
+            }
+            return res;
+        }
+
+        public void reset()
+        {
+            this.hCost = -1;
+            this.gCost = -1;
+            this.PrevStep = null;
+            resetRun();
+        }
+
+        public void resetRun()
+        {
+            this.Closed = false;
+        }
+
+        public override string ToString()
+        {
+            return "(" + xLoc + "," + yLoc + ")";
         }
     }
 

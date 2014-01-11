@@ -204,6 +204,11 @@ namespace Evac_Sim.AppGUI
                 printIndex(paper, index);
             }
         }
+        public void PaintEllipse(Graphics paper, uint index, Color c)
+        {
+            paper.FillEllipse(new SolidBrush(c),aRec[index]);
+            currentColors[index] = c;
+        }
 
         public void printIndex(Graphics paper, uint index)
         {
