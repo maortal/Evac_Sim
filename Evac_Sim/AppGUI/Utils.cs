@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using Evac_Sim.AgentsLogic;
@@ -183,6 +184,10 @@ namespace Evac_Sim.AppGUI
                 md.PaintRec(paper, s.Index, Color.Gray, indexing);
             }
 
+            public static bool isStateFree(State state)
+            {
+                return md.IsStateFree(state.Index);
+            }
             public static void fillState(State s, Color color)
             {
                 if (cancel)

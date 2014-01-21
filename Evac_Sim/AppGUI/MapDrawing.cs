@@ -182,7 +182,13 @@ namespace Evac_Sim.AppGUI
             return null;
         }
 
-        public State getState(Graphics paper, Point cursorPos, Color c, bool indexing)
+        public bool IsStateFree(uint state)
+        {
+            return  currentColors[state] == Color.White;
+        }
+
+        public
+            State getState(Graphics paper, Point cursorPos, Color c, bool indexing)
         {
             for (uint i = 0; i < aRec.Length; i++)
             {

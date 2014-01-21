@@ -56,6 +56,7 @@
       <DependentUpon>AgentsViewer.cs</DependentUpon>
     </Compile>
     <Compile Include="AppGUI\MapDrawing.cs" />
+    <Compile Include="AppGUI\SimulationHandler.cs" />
     <Compile Include="AppGUI\Utils.cs" />
     <Compile Include="DataStructures\BinaryHeap.cs" />
     <Compile Include="Constants.cs" />

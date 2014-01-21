@@ -38,10 +38,9 @@ namespace Evac_Sim.AppGUI
         }
         private void agentBindingSource_ListChanged(object sender, ListChangedEventArgs e)
         {
-            for (int i = 0; i < main.AgentsList.Count; i++)
-            {
-                dataGridView1[1, i].Style.BackColor = main.AgentsList.Values.ToArray()[i].GetAgColor();
-            }
+            Agent[] tmpagent = main.AgentsList.Values.ToArray();
+            for (int i = 0; i < tmpagent.Length; i++)
+                if (agentBindingSource.Count > i) dataGridView1[1, i].Style.BackColor = tmpagent[i].GetAgColor();
         }
     }
 }

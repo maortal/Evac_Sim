@@ -20,7 +20,7 @@ namespace Evac_Sim.AppGUI
         private State start, goal;
         private Graph gr;
         public ActionMoves[] aa = Constants.OctileMoves;
-        private bool moveMap, setProb, drawAgent, drawExit;
+        private bool moveMap, drawAgent, drawExit;
         private Point from;
         private int curx, cury;
         private string filenamekeeper;
@@ -72,12 +72,15 @@ namespace Evac_Sim.AppGUI
                             if (agentsView == null || !agentsView.Visible)
                             {
                                 agentsView = new AgentsViewer(this);
+                                Rectangle workingArea = Screen.GetWorkingArea(this);
+                                agentsView.Location = new Point(workingArea.Right - Size.Width,workingArea.Bottom - Size.Height);
                                 agentsView.Show();
                             }
                             AgentsList[fillpoint] = new Agent(fillpoint, curragentCol,new Astar(new OctileHeur(), this));
                             agentsView.agentBindingSource.Add(AgentsList[fillpoint]);
                             Utils.fillState(fillpoint, getNextRandCol());
                         }
+
                     }
                     if (drawExit && !AgentsList.ContainsKey(fillpoint))
                     {
@@ -93,6 +96,8 @@ namespace Evac_Sim.AppGUI
                             Utils.fillState(fillpoint, Color.White);
                         }
                     }
+                    if (Goals.Count > 0 && AgentsList.Count > 0) toolStripButton4.Enabled = true;
+                    else toolStripButton4.Enabled = false;
                     Draw();
                 }
             }
@@ -101,7 +106,6 @@ namespace Evac_Sim.AppGUI
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
             moveMap = false;
-            setProb = false;
         }
 
         
@@ -138,7 +142,7 @@ namespace Evac_Sim.AppGUI
             Utils.md.DrawMap(Utils.paper, Utils.indexing);
             Draw();
             this.Text = mapName;
-            resetMap();
+            ResetMap();
         }
 
         private void Draw()
@@ -214,42 +218,21 @@ namespace Evac_Sim.AppGUI
             return prevColor;
         }
 
+        private void toolStripButton5_Click(object sender, EventArgs e)
+        {
+            backgroundWorker2.CancelAsync();
+            if (!backgroundWorker2.IsBusy)
+            {
+                clearMap();
+                backgroundWorker2.RunWorkerAsync();
+            }
+        }
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
-            backgroundWorker1.RunWorkerAsync();
+            if (gr == null || Goals.Count == 0 || AgentsList.Count == 0) return;
+            if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
             Draw();
         }
-
-        private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            Utils.cancel = false;
-            try
-            {
-                foreach (Agent agen in AgentsList.Values)
-                {
-                    gr.reset();
-                    agen.Solve(Goals);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-        }
-        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            Draw();
-        }
-
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            //MessageBox.Show("States Expanded = " + solver.getExpanded() + "\nStates Generated = " + solver.getGenerated() + "\nTotal Distance Traveld = " + solver.getSolutionCost());
-            Utils.ReDraw();
-            foreach (Agent agen in AgentsList.Values.Where(agen => agen.visible))
-                Utils.drawSolution(agen.Agentsolution, agen.GetAgColor());
-            Draw();
-            agentsView.dataGridView1.Refresh();
-            }
 
         public void selectiveSolution()
         {
@@ -258,7 +241,7 @@ namespace Evac_Sim.AppGUI
                 Utils.drawSolution(agen.Agentsolution, agen.GetAgColor());
             Draw();
         }
-        private void resetMap()
+        private void ResetMap()
         {
             AgentsList = new Dictionary<State, Agent>(); 
             Goals = new HashSet<State>();
@@ -268,6 +251,8 @@ namespace Evac_Sim.AppGUI
                 gr.reset();
                 clearMap();
                 Draw();
+                toolStripButton4.Enabled = false;
+                toolStripButton5.Enabled = false;
             }
         }
 

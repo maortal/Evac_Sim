@@ -67,7 +67,7 @@
             this.dataGridView1.ShowCellToolTips = false;
             this.dataGridView1.ShowEditingIcon = false;
             this.dataGridView1.ShowRowErrors = false;
-            this.dataGridView1.Size = new System.Drawing.Size(808, 241);
+            this.dataGridView1.Size = new System.Drawing.Size(544, 241);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridView1_CurrentCellDirtyStateChanged);
             // 
@@ -134,9 +134,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(832, 265);
+            this.ClientSize = new System.Drawing.Size(568, 265);
             this.Controls.Add(this.dataGridView1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "AgentsViewer";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Agents List";
             this.Load += new System.EventHandler(this.AgentsViewer_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

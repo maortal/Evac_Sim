@@ -8,6 +8,7 @@ namespace Evac_Sim.AgentsLogic
     public class Agent
     {
         public State Index { get; set; }
+        public State GoalState { get; set; }
         public Color agenColor { get; set; }
         public SolPath Agentsolution { get; set; }
         private SearchAlgo solver;
@@ -45,6 +46,7 @@ namespace Evac_Sim.AgentsLogic
                 Agentsolution = ((Astar)solver).getSolution();
             totalExpand = solver.getExpanded();
             totalGenerated = solver.getGenerated();
+            GoalState = Agentsolution.Solgoal();
             solCost = solver.getSolutionCost();
             return ans;
         }
