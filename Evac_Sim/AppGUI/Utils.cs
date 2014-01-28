@@ -229,29 +229,6 @@ namespace Evac_Sim.AppGUI
                 indexing = !indexing;
                 md.reIndex(paper, indexing);
             }
-/*
-            public static State GetBestLS(ref LinkedList<State> open)
-            {
-                LinkedListNode<State> best = null;
-                double bestValue = double.MaxValue;
-                LinkedListNode<State> llns = open.First;
-                while (llns != null)
-                {
-                    if (llns.Value.LocalSearchGCostWith < bestValue)
-                    {
-                        bestValue = llns.Value.LocalSearchGCostWith;
-                        best = llns;
-                    }
-                    else if (llns.Value.LocalSearchGCostWith == bestValue)
-                    {
-                        if (llns.Value.LocalSearchGCostWithOut == bestValue)
-                            bestValue = llns.Value.LocalSearchGCostWith;
-                    }
-                    llns = llns.Next;
-                }
-                open.Remove(best);
-                return best.Value;
-            }*/
 
             public static double GetMaxEdgeCost(ActionMoves[] aMa)
             {

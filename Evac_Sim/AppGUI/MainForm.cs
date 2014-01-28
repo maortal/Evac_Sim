@@ -261,5 +261,16 @@ namespace Evac_Sim.AppGUI
             Utils.paper.Clear(Color.Black);
             Utils.md.DrawMap(Utils.paper, Utils.indexing);
         }
+
+        private void backgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            gr.reset();
+            System.Threading.Thread.Sleep(100);
+            foreach (State goal in Goals)
+                Utils.fillState(goal, Color.Yellow);
+            foreach (KeyValuePair<State, Agent> agent in AgentsList)
+                Utils.fillState(agent.Key, agent.Value.agenColor);
+            Draw();
+        }
     }
 }
