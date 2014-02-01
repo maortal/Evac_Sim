@@ -42,6 +42,7 @@ namespace Evac_Sim.SearchAlgorithems
 
         public bool FindPath(State start, State goal)
         {
+            init();
             this.goal = goal;
             State s = null;
             start.gCost = 0;
@@ -63,6 +64,7 @@ namespace Evac_Sim.SearchAlgorithems
         }
         public bool FindPath(HashSet<State> exits,State agent)
         {
+            init();
             goal = agent;
             State s = null;
             foreach (State st in exits)
