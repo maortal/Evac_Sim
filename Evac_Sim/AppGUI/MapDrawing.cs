@@ -237,21 +237,21 @@ namespace Evac_Sim.AppGUI
         {
             if (agenORexit)
             {
-                if (g.graphForMeir[ypos][xpos] == 'a')
+                if (g.graphForMeir[ypos][xpos] == 'c')
                 {
                     g.graphForMeir[ypos][xpos] = '.';
                     return false;
                 }
-                g.graphForMeir[ypos][xpos] = 'a';
+                g.graphForMeir[ypos][xpos] = 'c';
             }
             else
             {
-                if (g.graphForMeir[ypos][xpos] == 'e')
+                if (g.graphForMeir[ypos][xpos] == '>')
                 {
                     g.graphForMeir[ypos][xpos] = '.';
                     return false;
                 }
-                g.graphForMeir[ypos][xpos] = 'e';
+                g.graphForMeir[ypos][xpos] = '>';
             }
             return true;
         }
