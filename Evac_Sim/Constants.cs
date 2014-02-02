@@ -37,6 +37,8 @@ namespace Evac_Sim
         public static short expandState = 1;
 
         public static short generateStates = 2;
+
+        public static double AlphaLearning = 0.4;
         /*
          public static string[] allSolvers = {"Depth First Search","Bredth First Search","Uniform Cost Search",
                                                  "Pure Heuristic Search","A*","LSS-LRTA*","EDA*","FLRTA*","IDA*","ATPHS", "RTA*"};

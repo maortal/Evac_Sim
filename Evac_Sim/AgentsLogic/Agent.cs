@@ -19,7 +19,7 @@ namespace Evac_Sim.AgentsLogic
 
         public Agent(State location, Color nameColor,SearchAlgo algo)
         {
-            Index = new State(location);
+            Index = new DirectionMapState(location);
             agenColor = nameColor;
             solver = algo;
             solCost=totalGenerated=totalExpand = 0;

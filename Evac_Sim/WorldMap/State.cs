@@ -47,7 +47,7 @@ namespace Evac_Sim.WorldMap
 
         public override bool Equals(object obj)
         {
-            if (typeof(State) == obj.GetType())
+            if (obj.GetType() != typeof(DBNull))
                 return xLoc == ((State) obj).xLoc && yLoc == ((State) obj).yLoc;
             return false;
         }

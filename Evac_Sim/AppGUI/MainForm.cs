@@ -76,7 +76,7 @@ namespace Evac_Sim.AppGUI
                                 agentsView.Location = new Point(workingArea.Right - Size.Width,workingArea.Bottom - Size.Height);
                                 agentsView.Show();
                             }
-                            AgentsList[fillpoint] = new Agent(fillpoint, curragentCol,new Astar(new OctileHeur(), this));
+                            AgentsList[fillpoint] = new Agent(fillpoint, curragentCol, new Astar(new OctileHeur(), this));
                             agentsView.agentBindingSource.Add(AgentsList[fillpoint]);
                             Utils.fillState(fillpoint, getNextRandCol());
                         }
@@ -229,9 +229,7 @@ namespace Evac_Sim.AppGUI
         }
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
-            if (gr == null || Goals.Count == 0 || AgentsList.Count == 0) return;
-            if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
-            Draw();
+           
         }
 
         public void selectiveSolution()
@@ -271,6 +269,23 @@ namespace Evac_Sim.AppGUI
             foreach (KeyValuePair<State, Agent> agent in AgentsList)
                 Utils.fillState(agent.Key, agent.Value.agenColor);
             Draw();
+        }
+
+        private void selfishAstarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (gr == null || Goals.Count == 0 || AgentsList.Count == 0) return;
+            if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
+            Draw();
+        }
+
+        private void directionMapLeanerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
