@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -37,6 +38,8 @@ namespace Evac_Sim.AppGUI
             // grid = new List<Rectangle>();
             pBlack = new Pen(Color.Black, 0.01F);
             pBlue = new Pen(Color.Blue, 2);
+            AdjustableArrowCap bigArrow = new AdjustableArrowCap(3, 5);
+            pBlue.CustomEndCap = bigArrow;
             this.g = g;
 
 
@@ -130,6 +133,7 @@ namespace Evac_Sim.AppGUI
             for (uint i = 0; i < aRec.Length; i++)
             {
                 paper.FillRectangle(new SolidBrush(currentColors[i]), aRec[i]);
+                DrawVector(paper, i, g.GraphMap[i].DVx, g.GraphMap[i].DVy);
                 if (indexing)
                     printIndex(paper, i);
             }
@@ -237,6 +241,23 @@ namespace Evac_Sim.AppGUI
         {
             paper.DrawLine(pBlue, aRec[fromRec].X + size/2, aRec[fromRec].Y + size/2, aRec[toRec].X + size/2,
                 aRec[toRec].Y + size/2);
+        }
+        public Point CenterofRectangle(Rectangle rect)
+        {
+            return new Point(rect.Left + rect.Width / 2,
+                             rect.Top + rect.Height / 2);
+        }
+
+        public void DrawVector(Graphics paper, uint placeState, double xdir,double ydir)
+        {
+
+            Point centerofRec = CenterofRectangle(aRec[placeState]);
+            int lenx = (int)(centerofRec.X + xdir* sizeFH);
+            int leny = (int)(centerofRec.Y + ydir* sizeFH);
+            paper.DrawLine(pBlue, centerofRec.X, centerofRec.Y, lenx, leny);
+            //paper.DrawString(index.ToString(), font2, bBlack, sizeFH + aRec[index].X - 5, sizeFH + aRec[index].Y);
+           // paper.DrawLine(pBlue, aRec[fromRec]. + size / 2, aRec[fromRec].Y + size / 2, aRec[fromRec].X + size / 2,
+            //    aRec[fromRec].Y + size / 2);
         }
 
         public void DrawLine(Graphics paper, Point from, Point to)

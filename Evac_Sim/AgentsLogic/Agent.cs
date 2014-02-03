@@ -41,9 +41,9 @@ namespace Evac_Sim.AgentsLogic
 
         public bool Solve(HashSet<State> exitStates)
         {
-            bool ans = ((Astar)solver).FindPath(exitStates, this.Index);
+            bool ans = solver.FindPath(exitStates, this.Index);
             if (ans)
-                Agentsolution = ((Astar)solver).getSolution();
+                Agentsolution = solver.getSolution();
             totalExpand = solver.getExpanded();
             totalGenerated = solver.getGenerated();
             GoalState = Agentsolution.Solgoal();

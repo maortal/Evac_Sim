@@ -72,8 +72,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchAlgorithems\Astar.cs" />
-    <Compile Include="SearchAlgorithems\Heuristic.cs" />
-    <Compile Include="SearchAlgorithems\OctileHeur.cs" />
+    <Compile Include="SearchAlgorithems\DM-Astar.cs" />
+    <Compile Include="SearchAlgorithems\Heuristics\Heuristic.cs" />
+    <Compile Include="SearchAlgorithems\Heuristics\OctileHeur.cs" />
     <Compile Include="SearchAlgorithems\SearchAlgo.cs" />
     <Compile Include="WorldMap\ActionMoves.cs" />
     <Compile Include="WorldMap\Graph.cs" />

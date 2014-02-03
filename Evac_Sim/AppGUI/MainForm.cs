@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using Evac_Sim.AgentsLogic;
+using Evac_Sim.SearchAlgorithems.Heuristics;
 using Evac_Sim.WorldMap;
 using Evac_Sim.SearchAlgorithems;
 
@@ -58,46 +59,9 @@ namespace Evac_Sim.AppGUI
                 State fillpoint = Utils.getState(e.Location);
                 if (fillpoint != null)
                 {
-                    if (drawAgent && !Goals.Contains(fillpoint))
-                    {
-                        if (AgentsList.ContainsKey(fillpoint))
-                        {
-                            Agent tmp = AgentsList[fillpoint];
-                            AgentsList.Remove(fillpoint);
-                            agentsView.agentBindingSource.Remove(tmp);
-                            Utils.fillState(fillpoint, Color.White);
-                        }
-                        else
-                        {
-                            if (agentsView == null || !agentsView.Visible)
-                            {
-                                agentsView = new AgentsViewer(this);
-                                Rectangle workingArea = Screen.GetWorkingArea(this);
-                                agentsView.Location = new Point(workingArea.Right - Size.Width,workingArea.Bottom - Size.Height);
-                                agentsView.Show();
-                            }
-                            AgentsList[fillpoint] = new Agent(fillpoint, curragentCol, new Astar(new OctileHeur(), this));
-                            agentsView.agentBindingSource.Add(AgentsList[fillpoint]);
-                            Utils.fillState(fillpoint, getNextRandCol());
-                        }
-
-                    }
-                    if (drawExit && !AgentsList.ContainsKey(fillpoint))
-                    {
-
-                        if (!Goals.Contains(fillpoint))
-                        {
-                            Goals.Add(fillpoint);
-                            Utils.fillState(fillpoint, Color.Yellow);
-                        }
-                        else
-                        {
-                            Goals.Remove(fillpoint);
-                            Utils.fillState(fillpoint, Color.White);
-                        }
-                    }
-                    if (Goals.Count > 0 && AgentsList.Count > 0) toolStripButton4.Enabled = true;
-                    else toolStripButton4.Enabled = false;
+                    SetAgentorGoal(fillpoint);
+                    if (Goals.Count > 0 && AgentsList.Count > 0) selfishAstarToolStripMenuItem.Enabled = true;
+                    else selfishAstarToolStripMenuItem.Enabled = false;
                     Draw();
                 }
             }
@@ -108,7 +72,7 @@ namespace Evac_Sim.AppGUI
             moveMap = false;
         }
 
-        
+
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -136,8 +100,8 @@ namespace Evac_Sim.AppGUI
             start = null;
             goal = null;
             Utils.md = new MapDrawing(gr);
-            pictureBox1.Size = new Size((int) gr.Width*Utils.md.size + 20, (int) gr.Height*Utils.md.size + 40);
-            bm = new Bitmap((int) gr.Width*Utils.md.size + 20, (int) gr.Height*Utils.md.size + 40);
+            pictureBox1.Size = new Size((int)gr.Width * Utils.md.size + 20, (int)gr.Height * Utils.md.size + 40);
+            bm = new Bitmap((int)gr.Width * Utils.md.size + 20, (int)gr.Height * Utils.md.size + 40);
             Utils.paper = Graphics.FromImage(bm);
             Utils.md.DrawMap(Utils.paper, Utils.indexing);
             Draw();
@@ -155,10 +119,10 @@ namespace Evac_Sim.AppGUI
                 {
                     agentsView = new AgentsViewer(this);
                     agentsView.Show();
-                    }
+                }
                 else
                     agentsView.Update();
-             }
+            }
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
@@ -227,10 +191,6 @@ namespace Evac_Sim.AppGUI
                 backgroundWorker2.RunWorkerAsync();
             }
         }
-        private void toolStripButton4_Click(object sender, EventArgs e)
-        {
-           
-        }
 
         public void selectiveSolution()
         {
@@ -241,15 +201,15 @@ namespace Evac_Sim.AppGUI
         }
         private void ResetMap()
         {
-            AgentsList = new Dictionary<State, Agent>(); 
+            AgentsList = new Dictionary<State, Agent>();
             Goals = new HashSet<State>();
-            if (agentsView!=null) agentsView.Close();
+            if (agentsView != null) agentsView.Close();
             if (gr != null)
             {
                 gr.reset();
                 clearMap();
                 Draw();
-                toolStripButton4.Enabled = false;
+                selfishAstarToolStripMenuItem.Enabled = false;
                 toolStripButton5.Enabled = false;
             }
         }
@@ -278,14 +238,72 @@ namespace Evac_Sim.AppGUI
             Draw();
         }
 
-        private void directionMapLeanerToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SetAgentorGoal(State fillpoint, SearchAlgo searchalg = null)
         {
+            if (drawAgent && !Goals.Contains(fillpoint))
+            {
+                if (AgentsList.ContainsKey(fillpoint))
+                {
+                    Agent tmp = AgentsList[fillpoint];
+                    AgentsList.Remove(fillpoint);
+                    agentsView.agentBindingSource.Remove(tmp);
+                    Utils.fillState(fillpoint, Color.White);
+                }
+                else
+                {
+                    if (agentsView == null || !agentsView.Visible)
+                    {
+                        agentsView = new AgentsViewer(this);
+                        Rectangle workingArea = Screen.GetWorkingArea(this);
+                        agentsView.Location = new Point(workingArea.Right - Size.Width, workingArea.Bottom - Size.Height);
+                        agentsView.Show();
+                    }
+                    if (searchalg == null) searchalg = new Astar(new OctileHeur(), this);
+                    AgentsList[fillpoint] = new Agent(fillpoint, curragentCol, searchalg);
+                    agentsView.agentBindingSource.Add(AgentsList[fillpoint]);
+                    Utils.fillState(fillpoint, getNextRandCol());
+                }
 
+            }
+            if (drawExit && !AgentsList.ContainsKey(fillpoint))
+            {
+
+                if (!Goals.Contains(fillpoint))
+                {
+                    Goals.Add(fillpoint);
+                    Utils.fillState(fillpoint, Color.Yellow);
+                }
+                else
+                {
+                    Goals.Remove(fillpoint);
+                    Utils.fillState(fillpoint, Color.White);
+                }
+            }
+        }
+        private void PlaceRandomAgents(int numberofAgents,SearchAlgo searchalgo)
+        {
+            pictureBox3.BackColor = Color.GhostWhite;
+            drawExit = false;
+            drawAgent = true;
+            for (int i = 0; i < numberofAgents; i++)
+            {
+                int ridx;
+                do
+                {
+                    ridx = rngn.Next(gr.GraphMap.Length);
+                } while (AgentsList.ContainsKey(gr.GraphMap[ridx]) || Goals.Contains(gr.GraphMap[ridx]));
+                SetAgentorGoal(gr.GraphMap[ridx], searchalgo);
+            }
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
 
+            PlaceRandomAgents(20,new DM_Astar(new OctileHeur(), this));
+            if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
+            Draw();
         }
+
+        
     }
 }

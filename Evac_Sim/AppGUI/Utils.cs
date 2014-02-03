@@ -116,7 +116,10 @@ namespace Evac_Sim.AppGUI
                         System.Threading.Thread.Sleep(100);
                     //ReDraw();
                     foreach (State v in sol)
+                    {
                         md.PaintRec(paper, ((State) v).Index, pathcolor, indexing);
+                        //md.DrawVector(paper,v.Index,v.DVx,v.DVy);
+                    }
                     md.PaintEllipse(paper, ((State)sol.Solgoal()).Index, Color.Yellow);
                 }
 
@@ -197,6 +200,14 @@ namespace Evac_Sim.AppGUI
                 md.PaintRec(paper, s.Index, color, indexing);
             }
 
+            public static void drawvector(State s)
+            {
+                if (cancel)
+                    return;
+                if (md == null)
+                    return;
+                md.DrawVector(paper, s.Index, s.DVx,s.DVy);
+            }
             public static void paintDeadState_gDead(State s)
             {
                 if (cancel)

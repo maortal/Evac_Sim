@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Evac_Sim.AgentsLogic;
 using Evac_Sim.AppGUI;
 using Evac_Sim.DataStructures;
+using Evac_Sim.SearchAlgorithems.Heuristics;
 using Evac_Sim.WorldMap;
 
 namespace Evac_Sim.SearchAlgorithems

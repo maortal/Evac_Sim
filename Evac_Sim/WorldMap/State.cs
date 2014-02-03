@@ -106,7 +106,6 @@ namespace Evac_Sim.WorldMap
 
         public SolPath GetPath()
         {
-            return GetPathUpdateDm();
             SolPath res = new SolPath();
             //res.Add(this);
             State curr = this;
@@ -181,7 +180,6 @@ namespace Evac_Sim.WorldMap
             }
             return res;
         }
-
     }
 
 }
