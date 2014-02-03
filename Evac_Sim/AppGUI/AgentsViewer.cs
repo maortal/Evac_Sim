@@ -40,7 +40,13 @@ namespace Evac_Sim.AppGUI
         {
             Agent[] tmpagent = main.AgentsList.Values.ToArray();
             for (int i = 0; i < tmpagent.Length; i++)
-                if (agentBindingSource.Count > i) dataGridView1[1, i].Style.BackColor = tmpagent[i].GetAgColor();
+                if (agentBindingSource.Count > i)
+                {
+                    dataGridView1.Rows[i].HeaderCell.Value = (i+1).ToString();
+                    dataGridView1[1, i].Style.BackColor = tmpagent[i].GetAgColor();
+                }
+            dataGridView1.AutoResizeRowHeadersWidth(tmpagent.Length-1, DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders);
         }
+       
     }
 }

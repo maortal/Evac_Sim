@@ -88,6 +88,10 @@ namespace Evac_Sim.AppGUI
                 g.Width = Constants.width;
 
                 loadMap(g, ofd.SafeFileName);
+            string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper),"DM-" + Path.GetFileName(filenamekeeper));
+                if (File.Exists(Path.ChangeExtension(tmp, ".txt"))) importFromFileToolStripMenuItem.Enabled =true;
+                else importFromFileToolStripMenuItem.Enabled = false;
+
             }
         }
 
@@ -196,7 +200,8 @@ namespace Evac_Sim.AppGUI
         {
             Utils.ReDraw();
             foreach (Agent agen in AgentsList.Values.Where(agen => agen.visible))
-                Utils.drawSolution(agen.Agentsolution, agen.GetAgColor());
+                if (agen.Agentsolution!=null)Utils.drawSolution(agen.Agentsolution, agen.GetAgColor());
+                else Utils.fillState(agen.Index, agen.agenColor);  //will still run agent search
             Draw();
         }
         private void ResetMap()
@@ -302,6 +307,34 @@ namespace Evac_Sim.AppGUI
             PlaceRandomAgents(20,new DM_Astar(new OctileHeur(), this));
             if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
             Draw();
+            exportToFileToolStripMenuItem.Enabled = true;
+        }
+
+        private void exportToFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper),"DM-" + Path.GetFileName(filenamekeeper));
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(Path.ChangeExtension(tmp, ".txt")))
+            {
+                foreach (State st in gr.GraphMap)
+                {
+                    file.WriteLine(st.Index + ", " + st.DVx.ToString() + ", " + st.DVy.ToString());
+                }
+            }
+        }
+
+        private void importFromFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper),"DM-" + Path.GetFileName(filenamekeeper));
+            using (System.IO.StreamReader file = new System.IO.StreamReader(Path.ChangeExtension(tmp, ".txt")))
+            {
+                string line;
+                while ((line = file.ReadLine()) != null)
+                {
+                    var numbers = line.Split(',').Select(double.Parse).ToList();
+                    gr.GraphMap[(int)numbers[0]].DVx = numbers[1];
+                    gr.GraphMap[(int)numbers[0]].DVy = numbers[2];
+                }
+            }
         }
 
         

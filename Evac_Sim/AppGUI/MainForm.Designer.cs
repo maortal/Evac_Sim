@@ -57,6 +57,8 @@ namespace Evac_Sim.AppGUI
             this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -140,14 +142,16 @@ namespace Evac_Sim.AppGUI
             // 
             this.selfishAstarToolStripMenuItem.Name = "selfishAstarToolStripMenuItem";
             this.selfishAstarToolStripMenuItem.Size = new System.Drawing.Size(173, 24);
-            this.selfishAstarToolStripMenuItem.Text = "Selfish Astar";
+            this.selfishAstarToolStripMenuItem.Text = "A*";
             this.selfishAstarToolStripMenuItem.Click += new System.EventHandler(this.selfishAstarToolStripMenuItem_Click);
             // 
             // directionMapLeanerToolStripMenuItem
             // 
             this.directionMapLeanerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.learnToolStripMenuItem,
-            this.runToolStripMenuItem});
+            this.runToolStripMenuItem,
+            this.exportToFileToolStripMenuItem,
+            this.importFromFileToolStripMenuItem});
             this.directionMapLeanerToolStripMenuItem.Name = "directionMapLeanerToolStripMenuItem";
             this.directionMapLeanerToolStripMenuItem.Size = new System.Drawing.Size(173, 24);
             this.directionMapLeanerToolStripMenuItem.Text = "Direction Map";
@@ -166,7 +170,7 @@ namespace Evac_Sim.AppGUI
             this.toolStripMenuItem10,
             this.toolStripMenuItem11});
             this.learnToolStripMenuItem.Name = "learnToolStripMenuItem";
-            this.learnToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.learnToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
             this.learnToolStripMenuItem.Text = "Learn";
             // 
             // toolStripMenuItem2
@@ -233,8 +237,24 @@ namespace Evac_Sim.AppGUI
             // runToolStripMenuItem
             // 
             this.runToolStripMenuItem.Name = "runToolStripMenuItem";
-            this.runToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.runToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
             this.runToolStripMenuItem.Text = "Run!";
+            // 
+            // exportToFileToolStripMenuItem
+            // 
+            this.exportToFileToolStripMenuItem.Enabled = false;
+            this.exportToFileToolStripMenuItem.Name = "exportToFileToolStripMenuItem";
+            this.exportToFileToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
+            this.exportToFileToolStripMenuItem.Text = "Export To File";
+            this.exportToFileToolStripMenuItem.Click += new System.EventHandler(this.exportToFileToolStripMenuItem_Click);
+            // 
+            // importFromFileToolStripMenuItem
+            // 
+            this.importFromFileToolStripMenuItem.Enabled = false;
+            this.importFromFileToolStripMenuItem.Name = "importFromFileToolStripMenuItem";
+            this.importFromFileToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
+            this.importFromFileToolStripMenuItem.Text = "Import From File";
+            this.importFromFileToolStripMenuItem.Click += new System.EventHandler(this.importFromFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -395,6 +415,8 @@ namespace Evac_Sim.AppGUI
         private ToolStripMenuItem toolStripMenuItem10;
         private ToolStripMenuItem toolStripMenuItem11;
         private ToolStripMenuItem runToolStripMenuItem;
+        private ToolStripMenuItem exportToFileToolStripMenuItem;
+        private ToolStripMenuItem importFromFileToolStripMenuItem;
     }
 }
 
