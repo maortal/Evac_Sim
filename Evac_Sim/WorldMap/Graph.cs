@@ -56,13 +56,13 @@ namespace Evac_Sim.WorldMap
                 {
                     cell = line.ElementAt((int) x);
                     if (cell == '.'){
-                        Grid[y][x] = new DirectionMapState(i++, (uint) aa.Length, x, y);
+                        Grid[y][x] = new State(i++, (uint) aa.Length, x, y);
                     }
             else
                     {
                         Grid[y][x] = null;
                         if (cell == 'T')
-                            green.Add(new DirectionMapState(0, (uint)aa.Length, x, y));
+                            green.Add(new State(0, (uint)aa.Length, x, y));
                     }
                 }
             }
@@ -111,7 +111,7 @@ namespace Evac_Sim.WorldMap
 
                 for (uint x = 0; x < Width; x++)
                 {
-                    Grid[y][x] = new DirectionMapState(i++, (uint)aa.Length, x, y);
+                    Grid[y][x] = new State(i++, (uint)aa.Length, x, y);
                 }
             }
             this.Blocked = green.ToArray();

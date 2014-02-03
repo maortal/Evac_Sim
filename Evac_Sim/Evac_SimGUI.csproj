@@ -76,7 +76,6 @@
     <Compile Include="SearchAlgorithems\OctileHeur.cs" />
     <Compile Include="SearchAlgorithems\SearchAlgo.cs" />
     <Compile Include="WorldMap\ActionMoves.cs" />
-    <Compile Include="WorldMap\DirectionMapState.cs" />
     <Compile Include="WorldMap\Graph.cs" />
     <Compile Include="WorldMap\State.cs" />
     <EmbeddedResource Include="AppGUI\AgentsViewer.resx">

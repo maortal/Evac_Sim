@@ -22,7 +22,7 @@ namespace Evac_Sim.AgentsLogic
 
         public void Add(State st)
         {
-            AgentPath.Add(new DirectionMapState(st));
+            AgentPath.Add(new State(st));
             if (_size == 0)
                 this._start = AgentPath[0];
             _goal = AgentPath[_size++];

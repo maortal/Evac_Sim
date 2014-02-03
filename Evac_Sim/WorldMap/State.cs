@@ -19,6 +19,12 @@ namespace Evac_Sim.WorldMap
         public bool Closed;
         private int IdxInHeap;
 
+        //Direction Map Variables
+        public double DVx { get; set; }
+        public double DVy { get; set; }
+        private bool _visited = false;
+
+
         public State(){}
 
         public State(State copyof)
@@ -32,6 +38,8 @@ namespace Evac_Sim.WorldMap
             PrevStep = copyof.PrevStep;
             Closed = copyof.Closed;
             IdxInHeap = copyof.IdxInHeap;
+            DVx = 0;
+            DVy = 0;
         }
 
         public State(uint index, uint amountOfActions, uint xPos = 0, uint yPos = 0)
@@ -43,6 +51,8 @@ namespace Evac_Sim.WorldMap
             this.Closed = false;
             this.hCost = -1;
             this.gCost = -1;
+            DVx = 0;
+            DVy = 0;
         }
 
         public override bool Equals(object obj)
@@ -96,8 +106,9 @@ namespace Evac_Sim.WorldMap
 
         public SolPath GetPath()
         {
+            return GetPathUpdateDm();
             SolPath res = new SolPath();
-            res.Add(this);
+            //res.Add(this);
             State curr = this;
             while (curr != null)
             {
@@ -122,8 +133,55 @@ namespace Evac_Sim.WorldMap
 
         public override string ToString()
         {
+            if (DVx != 0.0 || DVy != 0.0)
+                return "(" + xLoc + "," + yLoc + ")" + "\tDV: [" + DVx + ", " + DVy + "]";
             return "(" + xLoc + "," + yLoc + ")";
         }
+
+
+        private void Normalize()
+        {
+            double magnitude = Math.Sqrt(Math.Pow(DVx, 2) + Math.Pow(DVy, 2));
+            DVx /= magnitude;
+            DVy /= magnitude;
+        }
+
+        public void UpdateDirectionVector(double xDirection, double yDirection)
+        {
+            if (!_visited)
+            {
+                DVx = Constants.AlphaLearning * xDirection;
+                DVy = Constants.AlphaLearning * yDirection;
+            }
+            else
+            {
+                DVx = (Constants.AlphaLearning * DVx) + ((1 - Constants.AlphaLearning) * xDirection);
+                DVy = (Constants.AlphaLearning * DVy) + ((1 - Constants.AlphaLearning) * yDirection);
+                Normalize();
+            }
+        }
+        public SolPath GetPathUpdateDm()
+        {
+            SolPath res = new SolPath();
+            //res.Add(this);
+            State prev = this;
+            State curr = this;
+            while (curr != null)
+            {
+                res.Add(curr);
+                if (!(prev == curr))
+                {
+                    uint bestact = ActionMoves.BestAction(prev, curr);
+                    prev.UpdateDirectionVector(Constants.OctileMoves[bestact].xEffect, Constants.OctileMoves[bestact].yEffect);
+                    prev._visited = true;
+                    curr.UpdateDirectionVector(Constants.OctileMoves[bestact].xEffect, Constants.OctileMoves[bestact].yEffect);
+                }
+                prev = curr;
+                curr = curr.PrevStep;  //we searched backward so its actually next
+            }
+            return res;
+        }
+
     }
 
 }

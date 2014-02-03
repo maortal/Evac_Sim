@@ -99,7 +99,7 @@ namespace Evac_Sim.SearchAlgorithems
             List<State> gDraw = new List<State>();
             foreach (ActionMoves a in aa)
             {
-                n = state.Neighbours[a.Index];
+                n = (State) state.Neighbours[a.Index];
                 if (n == null) continue;
                 if (n.Closed)
                     if (n.gCost > state.gCost + a.Cost)
@@ -112,9 +112,9 @@ namespace Evac_Sim.SearchAlgorithems
                     n.Closed = true;
                     n.gCost = state.gCost + a.Cost;
                     n.hCost = H.ApplyH(n, goal);
-                    n.PrevStep = state;
+                    n.PrevStep = (State) state;
                     open.Add(n);
-                    gDraw.Add((State) n);
+                    gDraw.Add(n);
                     generated++;
                 }
                 Utils.DrawGenerateStates(draw, gDraw);
@@ -122,6 +122,7 @@ namespace Evac_Sim.SearchAlgorithems
                 Utils.DrawExpandState(draw, state, state.Equals(goal));
             }
         }
+
 
         public void setHeuristics(IHeuristicFunc hFunc)
         {
