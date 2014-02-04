@@ -218,12 +218,15 @@ namespace Evac_Sim.AppGUI
         private void ResetMap()
         {
             AgentsList = new Dictionary<State, Agent>();
-            if (DMLearnMode==false) Goals = new HashSet<State>();
+            if (DMLearnMode == false) Goals = new HashSet<State>();
             if (agentsView != null) agentsView.Close();
             if (gr != null)
             {
                 gr.reset();
                 clearMap();
+                if (DMLearnMode)
+                    foreach (State stgoal in Goals)
+                        Utils.fillState(stgoal, Color.Yellow);
                 Draw();
                 selfishAstarToolStripMenuItem.Enabled = false;
                 toolStripButton5.Enabled = false;
@@ -321,6 +324,11 @@ namespace Evac_Sim.AppGUI
                 {
                     file.WriteLine(st.Index + ", " + st.DVx.ToString() + ", " + st.DVy.ToString());
                 }
+                file.WriteLine();
+                foreach (State state in Goals)
+                {
+                    file.WriteLine(state.Index.ToString());
+                }
             }
         }
 
@@ -330,11 +338,18 @@ namespace Evac_Sim.AppGUI
             using (System.IO.StreamReader file = new System.IO.StreamReader(Path.ChangeExtension(tmp, ".txt")))
             {
                 string line;
-                while ((line = file.ReadLine()) != null)
+                while ((line = file.ReadLine()) != "")
                 {
                     var numbers = line.Split(',').Select(double.Parse).ToList();
                     gr.GraphMap[(int)numbers[0]].DVx = numbers[1];
                     gr.GraphMap[(int)numbers[0]].DVy = numbers[2];
+                }
+                while ((line = file.ReadLine()) != null)
+                {
+                    int idx = int.Parse(line);
+                    State tmpstate = gr.GraphMap[idx];
+                    Goals.Add(tmpstate);
+                    Utils.fillState(tmpstate, Color.Yellow);
                 }
             }
         }
