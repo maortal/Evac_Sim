@@ -30,7 +30,9 @@ namespace Evac_Sim.AppGUI
         public Dictionary<State, Agent> AgentsList = new Dictionary<State, Agent>();
         public HashSet<State> Goals = new HashSet<State>();
         protected AgentsViewer agentsView;
-
+        private bool DMLearnMode = false;
+        public int numberofAgents { get; set; }
+        public int nIteration { get; set; }
         public MainForm()
         {
             InitializeComponent();
@@ -60,8 +62,16 @@ namespace Evac_Sim.AppGUI
                 if (fillpoint != null)
                 {
                     SetAgentorGoal(fillpoint);
-                    if (Goals.Count > 0 && AgentsList.Count > 0) selfishAstarToolStripMenuItem.Enabled = true;
-                    else selfishAstarToolStripMenuItem.Enabled = false;
+                    if (Goals.Count > 0)
+                    {
+                        learnToolStripMenuItem.Enabled = true;
+                        if (AgentsList.Count > 0) selfishAstarToolStripMenuItem.Enabled = true;
+                    }
+                    else
+                    {
+                        learnToolStripMenuItem.Enabled = false;
+                        selfishAstarToolStripMenuItem.Enabled = false;
+                    }
                     Draw();
                 }
             }
@@ -88,9 +98,10 @@ namespace Evac_Sim.AppGUI
                 g.Width = Constants.width;
 
                 loadMap(g, ofd.SafeFileName);
-            string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper),"DM-" + Path.GetFileName(filenamekeeper));
-                if (File.Exists(Path.ChangeExtension(tmp, ".txt"))) importFromFileToolStripMenuItem.Enabled =true;
+                string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper), "DM-" + Path.GetFileName(filenamekeeper));
+                if (File.Exists(Path.ChangeExtension(tmp, ".txt"))) importFromFileToolStripMenuItem.Enabled = true;
                 else importFromFileToolStripMenuItem.Enabled = false;
+                learnToolStripMenuItem.Enabled = false;
 
             }
         }
@@ -200,14 +211,14 @@ namespace Evac_Sim.AppGUI
         {
             Utils.ReDraw();
             foreach (Agent agen in AgentsList.Values.Where(agen => agen.visible))
-                if (agen.Agentsolution!=null)Utils.drawSolution(agen.Agentsolution, agen.GetAgColor());
+                if (agen.Agentsolution != null) Utils.drawSolution(agen.Agentsolution, agen.GetAgColor());
                 else Utils.fillState(agen.Index, agen.agenColor);  //will still run agent search
             Draw();
         }
         private void ResetMap()
         {
             AgentsList = new Dictionary<State, Agent>();
-            Goals = new HashSet<State>();
+            if (DMLearnMode==false) Goals = new HashSet<State>();
             if (agentsView != null) agentsView.Close();
             if (gr != null)
             {
@@ -285,7 +296,7 @@ namespace Evac_Sim.AppGUI
                 }
             }
         }
-        private void PlaceRandomAgents(int numberofAgents,SearchAlgo searchalgo)
+        private void PlaceRandomAgents(int numberofAgents, SearchAlgo searchalgo)
         {
             pictureBox3.BackColor = Color.GhostWhite;
             drawExit = false;
@@ -301,18 +312,9 @@ namespace Evac_Sim.AppGUI
             }
         }
 
-        private void toolStripMenuItem2_Click(object sender, EventArgs e)
-        {
-
-            PlaceRandomAgents(20,new DM_Astar(new OctileHeur(), this));
-            if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
-            Draw();
-            exportToFileToolStripMenuItem.Enabled = true;
-        }
-
         private void exportToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper),"DM-" + Path.GetFileName(filenamekeeper));
+            string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper), "DM-" + Path.GetFileName(filenamekeeper));
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(Path.ChangeExtension(tmp, ".txt")))
             {
                 foreach (State st in gr.GraphMap)
@@ -324,7 +326,7 @@ namespace Evac_Sim.AppGUI
 
         private void importFromFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper),"DM-" + Path.GetFileName(filenamekeeper));
+            string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper), "DM-" + Path.GetFileName(filenamekeeper));
             using (System.IO.StreamReader file = new System.IO.StreamReader(Path.ChangeExtension(tmp, ".txt")))
             {
                 string line;
@@ -337,6 +339,32 @@ namespace Evac_Sim.AppGUI
             }
         }
 
-        
+        private void learnToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            numberofAgents = 0;
+            nIteration = 0;
+            Form Learnprops = new LearnerProperties(this, gr.GraphMap.Length - Goals.Count);
+            Learnprops.ShowDialog();
+            if (nIteration != 0 && numberofAgents != 0)
+            {
+                DMLearnMode = true;
+                executeIterations();
+            }
+        }
+
+        private void executeIterations()
+        {
+            if (nIteration > 0)
+            {
+                PlaceRandomAgents(numberofAgents, new DM_Astar(new OctileHeur(), this));
+                if (!backgroundWorker1.IsBusy) backgroundWorker1.RunWorkerAsync();
+                Draw();
+            }
+            else
+            {
+                exportToFileToolStripMenuItem.Enabled = true;
+                DMLearnMode = false;
+            }
+        }
     }
 }

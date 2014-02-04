@@ -46,16 +46,6 @@ namespace Evac_Sim.AppGUI
             this.selfishAstarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.directionMapLeanerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.learnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -158,84 +148,15 @@ namespace Evac_Sim.AppGUI
             // 
             // learnToolStripMenuItem
             // 
-            this.learnToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3,
-            this.toolStripMenuItem4,
-            this.toolStripMenuItem5,
-            this.toolStripMenuItem6,
-            this.toolStripMenuItem7,
-            this.toolStripMenuItem8,
-            this.toolStripMenuItem9,
-            this.toolStripMenuItem10,
-            this.toolStripMenuItem11});
+            this.learnToolStripMenuItem.Enabled = false;
             this.learnToolStripMenuItem.Name = "learnToolStripMenuItem";
             this.learnToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
             this.learnToolStripMenuItem.Text = "Learn";
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(94, 24);
-            this.toolStripMenuItem2.Text = "1";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(94, 24);
-            this.toolStripMenuItem3.Text = "2";
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(94, 24);
-            this.toolStripMenuItem4.Text = "3";
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(94, 24);
-            this.toolStripMenuItem5.Text = "4";
-            // 
-            // toolStripMenuItem6
-            // 
-            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(94, 24);
-            this.toolStripMenuItem6.Text = "5";
-            // 
-            // toolStripMenuItem7
-            // 
-            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(94, 24);
-            this.toolStripMenuItem7.Text = "6";
-            // 
-            // toolStripMenuItem8
-            // 
-            this.toolStripMenuItem8.Name = "toolStripMenuItem8";
-            this.toolStripMenuItem8.Size = new System.Drawing.Size(94, 24);
-            this.toolStripMenuItem8.Text = "7";
-            // 
-            // toolStripMenuItem9
-            // 
-            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(94, 24);
-            this.toolStripMenuItem9.Text = "8";
-            // 
-            // toolStripMenuItem10
-            // 
-            this.toolStripMenuItem10.Name = "toolStripMenuItem10";
-            this.toolStripMenuItem10.Size = new System.Drawing.Size(94, 24);
-            this.toolStripMenuItem10.Text = "9";
-            // 
-            // toolStripMenuItem11
-            // 
-            this.toolStripMenuItem11.Name = "toolStripMenuItem11";
-            this.toolStripMenuItem11.Size = new System.Drawing.Size(94, 24);
-            this.toolStripMenuItem11.Text = "10";
+            this.learnToolStripMenuItem.Click += new System.EventHandler(this.learnToolStripMenuItem_Click);
             // 
             // runToolStripMenuItem
             // 
+            this.runToolStripMenuItem.Enabled = false;
             this.runToolStripMenuItem.Name = "runToolStripMenuItem";
             this.runToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
             this.runToolStripMenuItem.Text = "Run!";
@@ -367,6 +288,12 @@ namespace Evac_Sim.AppGUI
             Draw();
             agentsView.dataGridView1.Refresh();
             toolStripButton5.Enabled = true;
+            if (DMLearnMode && nIteration > 0)
+            {
+                ResetMap();
+                nIteration--;
+                executeIterations();
+            }
         }
 
         private void backgroundWorker2_DoWork(object sender, DoWorkEventArgs e)
@@ -404,16 +331,6 @@ namespace Evac_Sim.AppGUI
         private ToolStripMenuItem selfishAstarToolStripMenuItem;
         private ToolStripMenuItem directionMapLeanerToolStripMenuItem;
         private ToolStripMenuItem learnToolStripMenuItem;
-        private ToolStripMenuItem toolStripMenuItem2;
-        private ToolStripMenuItem toolStripMenuItem3;
-        private ToolStripMenuItem toolStripMenuItem4;
-        private ToolStripMenuItem toolStripMenuItem5;
-        private ToolStripMenuItem toolStripMenuItem6;
-        private ToolStripMenuItem toolStripMenuItem7;
-        private ToolStripMenuItem toolStripMenuItem8;
-        private ToolStripMenuItem toolStripMenuItem9;
-        private ToolStripMenuItem toolStripMenuItem10;
-        private ToolStripMenuItem toolStripMenuItem11;
         private ToolStripMenuItem runToolStripMenuItem;
         private ToolStripMenuItem exportToFileToolStripMenuItem;
         private ToolStripMenuItem importFromFileToolStripMenuItem;

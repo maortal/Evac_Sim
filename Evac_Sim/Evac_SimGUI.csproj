@@ -55,6 +55,12 @@
     <Compile Include="AppGUI\AgentsViewer.Designer.cs">
       <DependentUpon>AgentsViewer.cs</DependentUpon>
     </Compile>
+    <Compile Include="AppGUI\LearnerProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AppGUI\LearnerProperties.Designer.cs">
+      <DependentUpon>LearnerProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="AppGUI\MapDrawing.cs" />
     <Compile Include="AppGUI\SimulationHandler.cs" />
     <Compile Include="AppGUI\Utils.cs" />
@@ -81,6 +87,9 @@
     <Compile Include="WorldMap\State.cs" />
     <EmbeddedResource Include="AppGUI\AgentsViewer.resx">
       <DependentUpon>AgentsViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AppGUI\LearnerProperties.resx">
+      <DependentUpon>LearnerProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AppGUI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
