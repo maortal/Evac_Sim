@@ -19,6 +19,7 @@ namespace Evac_Sim.SearchAlgorithems
         protected MainForm draw;
         protected ActionMoves[] aa = Constants.OctileMoves;
         protected IHeuristicFunc H;
+        protected State start;
         protected State goal;
         protected uint expanded;
         protected uint generated;
@@ -44,6 +45,7 @@ namespace Evac_Sim.SearchAlgorithems
         public bool FindPath(State start, State goal)
         {
             init();
+            this.start = start;
             this.goal = goal;
             State s = null;
             start.gCost = 0;
@@ -63,7 +65,7 @@ namespace Evac_Sim.SearchAlgorithems
             Utils.DrawExpandState(draw,s,s.Equals(goal));
             return true;
         }
-        public bool FindPath(HashSet<State> exits,State agent)
+        public bool FindPath(HashSet<State> exits,State agent) //this search is backward from Goals to Agent
         {
             init();
             goal = agent;
@@ -94,7 +96,7 @@ namespace Evac_Sim.SearchAlgorithems
         }
 
 
-        protected virtual void Expand(State state)
+        protected void Expand(State state)
         {
             State n;
             List<State> gDraw = new List<State>();

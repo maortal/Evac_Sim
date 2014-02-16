@@ -58,5 +58,15 @@ namespace Evac_Sim.AgentsLogic
         {
             return AgentPath.GetEnumerator();
         }
+
+        public override string ToString()
+        {
+            string res = null;
+            foreach (State state in AgentPath)
+            {
+                res += state.ToString() + ", ";
+            }
+            return res.ToString();
+        }
     }
 }

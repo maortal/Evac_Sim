@@ -23,26 +23,12 @@ namespace Evac_Sim
         */
         public static uint GridWidth;
 
-        public static ushort Radius = 1;
-
-        public static uint NoSwamp = uint.MaxValue;
-
         public static uint height, width;
 
-
-        public static int debugCounter = 0;
-
-        public static uint expandStep = 1000;
-
-        public static short expandState = 1;
-
-        public static short generateStates = 2;
-
         public static double AlphaLearning = 0.4;
-        /*
-         public static string[] allSolvers = {"Depth First Search","Bredth First Search","Uniform Cost Search",
-                                                 "Pure Heuristic Search","A*","LSS-LRTA*","EDA*","FLRTA*","IDA*","ATPHS", "RTA*"};
-    
-         */
+
+        public static double AlphaNeibhourLearning = 0.8;
+        
+        public static double Wdmax = 20;
     }
 }

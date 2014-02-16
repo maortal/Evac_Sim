@@ -46,15 +46,16 @@ namespace Evac_Sim.AppGUI
             this.selfishAstarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.directionMapLeanerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.learnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
+            this.experStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.backgroundWorker2 = new System.ComponentModel.BackgroundWorker();
+            this.backgroundWorker3 = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -84,7 +85,8 @@ namespace Evac_Sim.AppGUI
             this.toolStripSeparator1,
             this.toolStripButton4,
             this.toolStripSeparator2,
-            this.toolStripButton5});
+            this.toolStripButton5,
+            this.experStripButton3});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(859, 27);
@@ -139,7 +141,6 @@ namespace Evac_Sim.AppGUI
             // 
             this.directionMapLeanerToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.learnToolStripMenuItem,
-            this.runToolStripMenuItem,
             this.exportToFileToolStripMenuItem,
             this.importFromFileToolStripMenuItem});
             this.directionMapLeanerToolStripMenuItem.Name = "directionMapLeanerToolStripMenuItem";
@@ -153,13 +154,6 @@ namespace Evac_Sim.AppGUI
             this.learnToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
             this.learnToolStripMenuItem.Text = "Learn";
             this.learnToolStripMenuItem.Click += new System.EventHandler(this.learnToolStripMenuItem_Click);
-            // 
-            // runToolStripMenuItem
-            // 
-            this.runToolStripMenuItem.Enabled = false;
-            this.runToolStripMenuItem.Name = "runToolStripMenuItem";
-            this.runToolStripMenuItem.Size = new System.Drawing.Size(188, 24);
-            this.runToolStripMenuItem.Text = "Run!";
             // 
             // exportToFileToolStripMenuItem
             // 
@@ -193,6 +187,17 @@ namespace Evac_Sim.AppGUI
             this.toolStripButton5.Size = new System.Drawing.Size(88, 24);
             this.toolStripButton5.Text = "Simulation!";
             this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton5_Click);
+            // 
+            // experStripButton3
+            // 
+            this.experStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.experStripButton3.Enabled = false;
+            this.experStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("experStripButton3.Image")));
+            this.experStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.experStripButton3.Name = "experStripButton3";
+            this.experStripButton3.Size = new System.Drawing.Size(92, 24);
+            this.experStripButton3.Text = "Experiment!";
+            this.experStripButton3.Click += new System.EventHandler(this.experStripButton3_Click);
             // 
             // pictureBox2
             // 
@@ -236,6 +241,11 @@ namespace Evac_Sim.AppGUI
             this.backgroundWorker2.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker2_DoWork);
             this.backgroundWorker2.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker2_ProgressChanged);
             this.backgroundWorker2.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker2_RunWorkerCompleted);
+            // 
+            // backgroundWorker3
+            // 
+            this.backgroundWorker3.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker3_DoWork);
+            this.backgroundWorker3.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker3_RunWorkerCompleted);
             // 
             // MainForm
             // 
@@ -331,9 +341,12 @@ namespace Evac_Sim.AppGUI
         private ToolStripMenuItem selfishAstarToolStripMenuItem;
         private ToolStripMenuItem directionMapLeanerToolStripMenuItem;
         private ToolStripMenuItem learnToolStripMenuItem;
-        private ToolStripMenuItem runToolStripMenuItem;
         private ToolStripMenuItem exportToFileToolStripMenuItem;
         private ToolStripMenuItem importFromFileToolStripMenuItem;
+        private ToolStripButton experStripButton3;
+        private BackgroundWorker backgroundWorker3;
+
+        
     }
 }
 

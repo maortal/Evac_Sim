@@ -60,5 +60,10 @@ namespace Evac_Sim.AgentsLogic
         {
             return "Agent"+ agenColor + " at location" + Index.ToString() + "Expand: " + totalExpand + " Generated: " + totalGenerated + " Solution Cost: " + solCost;
         }
+
+        public string ToExcel()
+        {
+            return totalExpand + "\t" + totalGenerated + "\t" + Agentsolution.SolLength().ToString();
+        }
     }
 }

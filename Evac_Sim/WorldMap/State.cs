@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using Evac_Sim.AgentsLogic;
 using Evac_Sim.DataStructures;
 
@@ -145,17 +147,19 @@ namespace Evac_Sim.WorldMap
             DVy /= magnitude;
         }
 
-        public void UpdateDirectionVector(double xDirection, double yDirection)
+        public void UpdateDirectionVector(double alphaLearning, Point actionVector)
         {
+            double xDirection = actionVector.X;
+            double yDirection = actionVector.Y;
             if (!_visited)
             {
-                DVx = Constants.AlphaLearning * xDirection;
-                DVy = Constants.AlphaLearning * yDirection;
+                DVx = alphaLearning * xDirection;
+                DVy = alphaLearning * yDirection;
             }
             else
             {
-                DVx = (Constants.AlphaLearning * DVx) + ((1 - Constants.AlphaLearning) * xDirection);
-                DVy = (Constants.AlphaLearning * DVy) + ((1 - Constants.AlphaLearning) * yDirection);
+                DVx = (alphaLearning * DVx) + ((1 - Constants.AlphaLearning) * xDirection);
+                DVy = (alphaLearning * DVy) + ((1 - Constants.AlphaLearning) * yDirection);
                 Normalize();
             }
         }
@@ -168,12 +172,15 @@ namespace Evac_Sim.WorldMap
             while (curr != null)
             {
                 res.Add(curr);
-                if (!(prev == curr))
+                if (prev != curr)
                 {
                     uint bestact = ActionMoves.BestAction(prev, curr);
-                    prev.UpdateDirectionVector(Constants.OctileMoves[bestact].xEffect, Constants.OctileMoves[bestact].yEffect);
+                    Point actionVector = new Point(Constants.OctileMoves[bestact].xEffect,Constants.OctileMoves[bestact].yEffect);
+                    prev.UpdateDirectionVector(Constants.AlphaLearning,actionVector);
+                    foreach (State neighbour in prev.Neighbours.Where(neighbour => neighbour!=null))
+                        neighbour.UpdateDirectionVector(Constants.AlphaNeibhourLearning, actionVector);
                     prev._visited = true;
-                    curr.UpdateDirectionVector(Constants.OctileMoves[bestact].xEffect, Constants.OctileMoves[bestact].yEffect);
+                    curr.UpdateDirectionVector(Constants.AlphaLearning,actionVector);
                 }
                 prev = curr;
                 curr = curr.PrevStep;  //we searched backward so its actually next

@@ -52,7 +52,7 @@ namespace Evac_Sim.AppGUI
 
             public static void DrawExpandState(MainForm fm, State s, bool goal)
             {
-                if (fm == null || cancel)
+                if (fm == null || cancel || MainForm.ExperimentMODE || MainForm.DMLearnMode)
                     return;
                 if (pause)
                     System.Threading.Thread.Sleep(100);
@@ -69,15 +69,15 @@ namespace Evac_Sim.AppGUI
 
             public static void DrawGenerateStates(MainForm fm, List<State> ls)
             {
-                if (fm == null || cancel)
-                    return;
-                if (pause)
-                    System.Threading.Thread.Sleep(100);
-                foreach (State s in ls)
-                {
-                    md.PaintRec(paper, s.Index, Color.Yellow, indexing);
-                }
-            }
+                    if (fm == null || cancel || MainForm.ExperimentMODE || MainForm.DMLearnMode)
+                        return;
+                    if (pause)
+                        System.Threading.Thread.Sleep(100);
+                    foreach (State s in ls)
+                    {
+                        md.PaintRec(paper, s.Index, Color.Yellow, indexing);
+                    }
+              }
 
             public static void DrawLine(Point from, Point to)
             {
@@ -138,45 +138,7 @@ namespace Evac_Sim.AppGUI
                     md.PaintRec(paper, open[i].Index, Color.Chartreuse, indexing);
                 }
             }
-
-            public static void drawCurrentLRTA(MainForm fm, State s, bool goal)
-            {
-                if (cancel)
-                    return;
-                if (s == null)
-                    return;
-                if (fm == null)
-                    return;
-                if (pause)
-                    System.Threading.Thread.Sleep(100);
-                Utils.md.PaintRec(Utils.paper, s.Index, Color.LightSalmon, false);
-                if (Utils.indexing)
-                    Utils.md.printIndex(Utils.paper, s.Index);
-                drawCounter++;
-                if (drawCounter % fastForword == 0 || goal)
-                {
-                    fm.backgroundWorker1.ReportProgress(1);
-                    System.Threading.Thread.Sleep(speed);
-                    drawCounter = 0;
-                }
-            }
-
-            public static void updateValLRTA(State s, double d)
-            {
-                if (cancel)
-                    return;
-                if (paper == null)
-                    return;
-                int hue = 255 - (int)d / 2;
-                if (hue < 100 || hue > 255)
-                    hue = 100;
-                if (pause)
-                    System.Threading.Thread.Sleep(100);
-                md.PaintRec(Utils.paper, s.Index, Color.FromArgb(hue, 0, 0), false);
-                md.PaintRec(Utils.paper, s.Index, Color.Red, false);
-                if (indexing)
-                    md.printIndex(paper, s.Index);
-            }
+            
 
             public static void paintDeadState_State(State s)
             {
@@ -240,16 +202,6 @@ namespace Evac_Sim.AppGUI
                 indexing = !indexing;
                 md.reIndex(paper, indexing);
             }
-
-            public static double GetMaxEdgeCost(ActionMoves[] aMa)
-            {
-                double max = 0;
-                for (int i = 0; i < aMa.Length; i++)
-                {
-                    if (aMa[i].Cost > max)
-                        max = aMa[i].Cost;
-                }
-                return max;
-            }
+            
         }
     }

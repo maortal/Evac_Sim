@@ -17,6 +17,7 @@ namespace Evac_Sim.AppGUI
 {
     public partial class MainForm : Form
     {
+        private TextWriter _expFile;
         private Bitmap bm;
         private State start, goal;
         private Graph gr;
@@ -30,9 +31,17 @@ namespace Evac_Sim.AppGUI
         public Dictionary<State, Agent> AgentsList = new Dictionary<State, Agent>();
         public HashSet<State> Goals = new HashSet<State>();
         protected AgentsViewer agentsView;
-        private bool DMLearnMode = false;
+        public static bool DMLearnMode = false;
+        public static bool ExperimentMODE = false;
         public int numberofAgents { get; set; }
         public int nIteration { get; set; }
+        public bool AstarTurn { get; set; }
+        public bool DMTurn { get; set; }
+
+        public int ExpnumAgents { get; set; }
+        public int ExpnumIters { get; set; }
+
+
         public MainForm()
         {
             InitializeComponent();
@@ -61,14 +70,17 @@ namespace Evac_Sim.AppGUI
                 State fillpoint = Utils.getState(e.Location);
                 if (fillpoint != null)
                 {
+                    toolStripButton5.Enabled = false;
                     SetAgentorGoal(fillpoint);
                     if (Goals.Count > 0)
                     {
                         learnToolStripMenuItem.Enabled = true;
+                        experStripButton3.Enabled = true;
                         if (AgentsList.Count > 0) selfishAstarToolStripMenuItem.Enabled = true;
                     }
                     else
                     {
+                        experStripButton3.Enabled = false;
                         learnToolStripMenuItem.Enabled = false;
                         selfishAstarToolStripMenuItem.Enabled = false;
                     }
@@ -98,7 +110,8 @@ namespace Evac_Sim.AppGUI
                 g.Width = Constants.width;
 
                 loadMap(g, ofd.SafeFileName);
-                string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper), "DM-" + Path.GetFileName(filenamekeeper));
+                string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper),
+                    "DM-" + Path.GetFileName(filenamekeeper));
                 if (File.Exists(Path.ChangeExtension(tmp, ".txt"))) importFromFileToolStripMenuItem.Enabled = true;
                 else importFromFileToolStripMenuItem.Enabled = false;
                 learnToolStripMenuItem.Enabled = false;
@@ -212,13 +225,14 @@ namespace Evac_Sim.AppGUI
             Utils.ReDraw();
             foreach (Agent agen in AgentsList.Values.Where(agen => agen.visible))
                 if (agen.Agentsolution != null) Utils.drawSolution(agen.Agentsolution, agen.GetAgColor());
-                else Utils.fillState(agen.Index, agen.agenColor);  //will still run agent search
+                else Utils.fillState(agen.Index, agen.agenColor); //will still run agent search
             Draw();
         }
+
         private void ResetMap()
         {
             AgentsList = new Dictionary<State, Agent>();
-            if (DMLearnMode == false) Goals = new HashSet<State>();
+            if (DMLearnMode == false && ExperimentMODE == false) Goals = new HashSet<State>();
             if (agentsView != null) agentsView.Close();
             if (gr != null)
             {
@@ -241,13 +255,16 @@ namespace Evac_Sim.AppGUI
 
         private void backgroundWorker2_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            gr.reset();
-            System.Threading.Thread.Sleep(100);
-            foreach (State goal in Goals)
-                Utils.fillState(goal, Color.Yellow);
-            foreach (KeyValuePair<State, Agent> agent in AgentsList)
-                Utils.fillState(agent.Key, agent.Value.agenColor);
-            Draw();
+            if (!ExperimentMODE)
+            {
+                gr.reset();
+                System.Threading.Thread.Sleep(100);
+                foreach (State goal in Goals)
+                    Utils.fillState(goal, Color.Yellow);
+                foreach (KeyValuePair<State, Agent> agent in AgentsList)
+                    Utils.fillState(agent.Key, agent.Value.agenColor);
+                Draw();
+            }
         }
 
         private void selfishAstarToolStripMenuItem_Click(object sender, EventArgs e)
@@ -299,6 +316,7 @@ namespace Evac_Sim.AppGUI
                 }
             }
         }
+
         private void PlaceRandomAgents(int numberofAgents, SearchAlgo searchalgo)
         {
             pictureBox3.BackColor = Color.GhostWhite;
@@ -317,7 +335,8 @@ namespace Evac_Sim.AppGUI
 
         private void exportToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper), "DM-" + Path.GetFileName(filenamekeeper));
+            string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper),
+                "DM-" + Path.GetFileName(filenamekeeper));
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(Path.ChangeExtension(tmp, ".txt")))
             {
                 foreach (State st in gr.GraphMap)
@@ -334,7 +353,8 @@ namespace Evac_Sim.AppGUI
 
         private void importFromFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper), "DM-" + Path.GetFileName(filenamekeeper));
+            string tmp = filenamekeeper.Replace(Path.GetFileName(filenamekeeper),
+                "DM-" + Path.GetFileName(filenamekeeper));
             using (System.IO.StreamReader file = new System.IO.StreamReader(Path.ChangeExtension(tmp, ".txt")))
             {
                 string line;
@@ -352,6 +372,8 @@ namespace Evac_Sim.AppGUI
                     Utils.fillState(tmpstate, Color.Yellow);
                 }
             }
+            if (Goals.Count>0 ) experStripButton3.Enabled = true;
+            Draw(); 
         }
 
         private void learnToolStripMenuItem_Click(object sender, EventArgs e)
@@ -379,6 +401,132 @@ namespace Evac_Sim.AppGUI
             {
                 exportToFileToolStripMenuItem.Enabled = true;
                 DMLearnMode = false;
+            }
+        }
+
+        private void experStripButton3_Click(object sender, EventArgs e)
+        {
+            numberofAgents = 0;
+            nIteration = 0;
+            Form Learnprops = new LearnerProperties(this, gr.GraphMap.Length - Goals.Count);
+            Learnprops.Text = "Experiment Properties";
+            Learnprops.ShowDialog();
+            
+            ExpnumAgents = numberofAgents;
+            ExpnumIters = nIteration;
+            numberofAgents = 0;
+            nIteration = 0;
+            if (ExpnumIters != 0 && ExpnumAgents != 0)
+            {
+                setNewExperiment();
+            }
+        }
+
+        
+        void setNewExperiment()
+        {
+            ExpnumIters--;
+            ExperimentMODE = true;
+            ResetMap();
+            _expFile = new StreamWriter(Path.GetFileNameWithoutExtension(filenamekeeper) + "-experimentResults.txt", true);
+            _expFile.WriteLine();
+            _expFile.WriteLine(Path.GetFileName(filenamekeeper) + "\t" + ExpnumAgents);
+            _expFile.WriteLine("-------------------");
+            PlaceRandomAgents(ExpnumAgents, new Astar(new OctileHeur(), this));
+            AstarTurn = true;
+            if (!backgroundWorker3.IsBusy) backgroundWorker3.RunWorkerAsync();
+        }
+
+        private void backgroundWorker3_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //MessageBox.Show("States Expanded = " + solver.getExpanded() + "\nStates Generated = " + solver.getGenerated() + "\nTotal Distance Traveld = " + solver.getSolutionCost());
+            //Utils.ReDraw();
+            if (DMTurn == false)
+            {
+                clearMap();
+                _expFile.WriteLine("A* Results!");
+                SimulationHandler simulate = new SimulationHandler(AgentsList.Values,this);
+                string result = simulate.BeginSimulation();
+                Dictionary<State, Agent> dmAgentList = new Dictionary<State, Agent>();
+                foreach (Agent agen in AgentsList.Values)
+                {
+                   // _expFile.WriteLine(agen.ToExcel() + "\t" + agen.Agentsolution.ToString());
+                    Agent tmp = new Agent(agen.Index, agen.agenColor, new DM_Astar(new OctileHeur(), this));
+                    tmp.GoalState = gr.GraphMap[agen.GoalState.Index];
+                    dmAgentList.Add(agen.Index, tmp);
+                }
+                _expFile.WriteLine(result);
+                _expFile.WriteLine();
+                _expFile.WriteLine("DM Results");
+              AgentsList = new Dictionary<State, Agent>(dmAgentList);
+               // Draw();
+                agentsView.dataGridView1.Refresh();
+
+                AstarTurn = false;
+                DMTurn = true;
+                if (!backgroundWorker3.IsBusy) backgroundWorker3.RunWorkerAsync();
+                return;
+            }
+            if (DMTurn)
+            {
+                //Utils.ReDraw();
+                clearMap();
+                foreach (Agent agen in AgentsList.Values)
+                    agen.Agentsolution.Reverse();
+                SimulationHandler simulate = new SimulationHandler(AgentsList.Values, this);
+                string result = simulate.BeginSimulation();
+                foreach (Agent agen in AgentsList.Values)
+                {
+                  //  _expFile.WriteLine(agen.ToExcel() + "\t" + agen.Agentsolution.ToString());
+                    agen.Agentsolution.Reverse();
+                    Utils.drawSolution(agen.Agentsolution, agen.GetAgColor());
+                }
+                _expFile.WriteLine(result);
+                Draw();
+                agentsView.dataGridView1.Refresh();
+                DMTurn = false;
+                toolStripButton5.Enabled = true;
+                _expFile.Close();
+            }
+            if (ExpnumIters>0) setNewExperiment();
+            else ExperimentMODE = false;
+        }
+
+        
+
+
+        private void backgroundWorker3_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Utils.cancel = false;
+            if (AstarTurn)
+            {
+                try
+                {
+                    foreach (Agent agen in AgentsList.Values)
+                    {
+                        gr.reset();
+                        agen.Solve(Goals);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+            }
+            if (DMTurn)
+            {
+                try
+                {
+                    foreach (Agent agen in AgentsList.Values)
+                    {
+                        gr.reset();
+                        agen.Solve(agen.GoalState);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
             }
         }
     }
